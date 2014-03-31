@@ -64,8 +64,12 @@ Dir.chdir("#{CWD}/src") do
   Dir.chdir(dir) do
     sys("./configure --prefix=#{CWD}/dst/ --disable-shared --enable-static --with-pic")
     sys("patch -p0 < ../file-soft-check.patch")
-    sys("make -C src install")
-    sys("make -C magic install")
+    Dir.chdir("src") do
+      sys("make install")
+    end
+    Dir.chdir("magic") do
+      sys("make install")
+    end
     # this should evaluate to either 'lib' or 'lib64'
     libdir = `grep ^libdir config.log`.strip().split("'")[1].split('/')[-1]
   end
